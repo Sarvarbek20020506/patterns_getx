@@ -7,32 +7,38 @@ import '../services/http_service.dart';
 import '../services/log_servise.dart';
 
 class UpdateController extends GetxController {
-  var isLoading = false.obs;
-  var items = [].obs;
+  var isLoading = false;
+  var items = [];
 
   void apiPostUpdate(Post post) async {
-    isLoading.value = true;
+    isLoading = true;
+    update();
     Network.PUT(Network.API_UPDATE + post.id.toString(), Network.paramsUpdate(post)).then((response) => {
               LogService.i(response.toString()),
               if (response != null){
                   Post.fromJson(jsonDecode(response.toString())) as List<Post>,
-                  isLoading.value = false,
+                  isLoading = false,
                 }else{
-                  items.value = [],
-                  isLoading.value = false,
+                  items = [],
+                  isLoading = false,
+                update(),
                 }
-            });
+
+            }
+        );
   }
 
   void apiPostList() async {
-    isLoading.value = true;
+    isLoading = true;
+    update();
     var response = await Network.GET(Network.API_LIST, Network.paramsEmpty());
 
-    isLoading.value = false;
+    isLoading = false;
     if (response != null) {
-      items.value = Network.parsePostList(response);
+      items = Network.parsePostList(response);
     } else {
-      items.value = [];
+      items= [];
+      update();
     }
   }
 }

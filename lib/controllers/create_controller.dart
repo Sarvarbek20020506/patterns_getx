@@ -8,15 +8,17 @@ import '../services/http_service.dart';
 import '../services/log_servise.dart';
 
 class CreateController extends GetxController{
-  var isLoading = false.obs;
-  var items = [].obs;
+  var isLoading = false;
+  var items = [];
 
 
   void apiPostCreate() async {
-    isLoading.value = true;
+    isLoading = true;
+    update();
     try {
       final response = await Network.POST(Network.API_CREATE, Network.paramsCreate(post as Post ));
-      isLoading.value = false;
+      isLoading = false;
+      update();
       if (response != null) {
         LogService.w(response);
         Post.fromJson(jsonDecode(response.toString())) as List<Post>;
@@ -27,21 +29,22 @@ class CreateController extends GetxController{
     } catch (e) {
       LogService.e("Xatolik: $e");
     }
+    update();
   }
 
   void apiPostList()async{
 
-      isLoading.value = true;
+      isLoading = true;
+      update();
 
     var response = await Network.GET(Network.API_LIST, Network.paramsEmpty());
-      isLoading.value = false;
+      isLoading = false;
       if(response !=null){
-        items.value = Network.parsePostList(response);
+        items = Network.parsePostList(response);
       }else{
-        items.value =[];
+        items =[];
       }
-
-
+      update();
   }
 
 }

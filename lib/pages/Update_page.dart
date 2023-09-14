@@ -29,21 +29,24 @@ class _UpdatePageState extends State<UpdatePage> {
         title: const Text("Update Page"),
         backgroundColor: Colors.blue,
       ),
-      body:  Obx(
-          ()=>Stack(
+      body:  GetBuilder(
+        init: UpdateController(),
+        builder: (_updateController){
+          return Stack(
             children: [
-              Get.find<UpdateController>().isLoading.value? const Center(
+              _updateController.isLoading? const Center(
                 child: CircularProgressIndicator(),
               ):const SizedBox.shrink(),
               ListView.builder(
-                itemCount: Get.find<UpdateController>().items.length,
+                itemCount: _updateController.items.length,
                 itemBuilder: (ctx,index){
-                  Post post = Get.find<UpdateController>().items[index];
-                  return itemUpdatePost(Get.find<UpdateController>(),post);
+                  Post post = _updateController.items[index];
+                  return itemUpdatePost(_updateController,post);
                 },
               ),
             ],
-          ),
+          );
+        },
       ),
     );
   }
